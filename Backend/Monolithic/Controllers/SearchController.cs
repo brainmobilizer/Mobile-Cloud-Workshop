@@ -17,7 +17,7 @@ namespace ContosoMaintenance.WebAPI.Controllers
 
         public SearchController(IConfiguration configuration)
         {
-            serviceClient = new SearchServiceClient(configuration["AzureSearch:AzureSearchServiceName"], new SearchCredentials(configuration["AzureSearch:AzureSearchApiKey"]));                                          
+            serviceClient = new SearchServiceClient(configuration["AzureSearch:ServiceName"], new SearchCredentials(configuration["AzureSearch:AzureSearchApiKey"]));                                          
         }
 
         [Route("/api/search/jobs")]
@@ -47,6 +47,35 @@ namespace ContosoMaintenance.WebAPI.Controllers
                 jobList.Add(job);
             }
             return jobList; 
+        }
+
+        [Route("/api/search/jobs/suggestions")]
+        public async Task<List<Job>> Suggestions(string keyword)
+        {
+            var sp = new SuggestParameters();
+            sp.HighlightPreTag = "[";
+            sp.HighlightPostTag = "]";
+            sp.UseFuzzyMatching = true;
+            sp.MinimumCoverage = 50;
+            sp.Top = 100;
+
+            var indexClient = serviceClient.Indexes.GetClient("job-index");
+
+            var response = await indexClient.Documents.SuggestAsync<Job>(keyword, "suggestions", sp);
+
+            var jobList = new List<Job>();
+            foreach (var document in response.Results)
+            {
+                var job = new Job
+                {
+                    Name = document.Text,
+                    Details = document.Document.Details,
+                    Status = document.Document.Status,
+                };
+
+                jobList.Add(job);
+            }
+            return jobList;
         }
 
 
