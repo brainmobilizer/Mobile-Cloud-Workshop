@@ -15,6 +15,10 @@ namespace OpenFlightsCLI.Parsers
         string searchServiceName;
         string searchServiceAdminApiKey;
 
+        public AirlinesParser()
+        {
+            
+        }
 
         public AirlinesParser(string searchServiceName, string searchServiceAdminApiKey)
         {
@@ -22,26 +26,18 @@ namespace OpenFlightsCLI.Parsers
             this.searchServiceAdminApiKey = searchServiceAdminApiKey;
         }
 
-        public void Parse()
+        public List<Airline> Parse()
         {
             var engine = new FileHelperEngine<AirlineRaw>();
             engine.ErrorManager.ErrorMode = ErrorMode.IgnoreAndContinue;
 
-            Console.WriteLine("Pass in the Airlines.dat file found the Data directory");
-
-            var result = engine.ReadFile(Console.ReadLine().Trim());
+            var result = engine.ReadFile("Data/Airlines.dat");
             List<Airline> airlines = new List<Airline>();
 
             foreach (var airlineRaw in result)
             {
                 if (!string.IsNullOrEmpty(airlineRaw.Name))
                 {
-                    Console.WriteLine($"Name: {airlineRaw.Name}");
-                    Console.WriteLine($"Call Sign: {airlineRaw.CallSign}");
-                    Console.WriteLine($"Country: {airlineRaw.Country}");
-
-                    Console.WriteLine("");
-
                     var airline = new Airline
                     {
                         Id = airlineRaw.Id.ToString(),
@@ -55,16 +51,8 @@ namespace OpenFlightsCLI.Parsers
                     airlines.Add(airline);
                 }
             }
-
-            PushToSearchIndex(airlines);
-
-            Console.WriteLine("");
-            Console.WriteLine($"Total Airports: {result.Count()}");
-            Console.WriteLine($"------------------------------------------------------------");
-            Console.WriteLine("");
-            Console.WriteLine("");
-
-
+            return airlines;
+            //PushToSearchIndex(airlines);
         }
 
         void PushToSearchIndex(List<Airline> airlines)

@@ -7,12 +7,8 @@ using Newtonsoft.Json;
 namespace OpenFlightsCLI.Models
 {
     [SerializePropertyNamesAsCamelCase]
-    public class Airport
+    public class Airport : SearchBaseModel
     {
-        [JsonProperty("id")]
-        [System.ComponentModel.DataAnnotations.Key]
-        public string Id { get; set; }
-
         [IsSearchable]
         public string Name { get; set; }
 

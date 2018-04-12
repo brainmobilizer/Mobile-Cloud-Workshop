@@ -15,32 +15,29 @@ namespace OpenFlightsCLI.Parsers
         string searchServiceName;
         string searchServiceAdminApiKey;
 
+        public AirportsParser()
+        {
+            
+        }
+
         public AirportsParser(string searchServiceName, string searchServiceAdminApiKey)
         {
             this.searchServiceName = searchServiceName;
             this.searchServiceAdminApiKey = searchServiceAdminApiKey;
         }
 
-        public void Parse()
+        public List<Airport> Parse()
         {
             var engine = new FileHelperEngine<AirportRaw>();
             engine.ErrorManager.ErrorMode = ErrorMode.IgnoreAndContinue;
 
-            Console.WriteLine("Pass in the Airports.dat file found the Data directory");
-
-            var result = engine.ReadFile(Console.ReadLine().Trim());
+            var result = engine.ReadFile("Data/Airports.dat");
             List<Airport> airports = new List<Airport>();
 
             foreach (var rawAirport in result)
             {
                 if (!string.IsNullOrEmpty(rawAirport.Name))
                 {
-                    Console.WriteLine($"Name: {rawAirport.Name}");
-                    Console.WriteLine($"Code: {rawAirport.Code}");
-                    Console.WriteLine($"Country: {rawAirport.Country}");
-
-                    Console.WriteLine("");
-
                     var airport = new Airport();
                     airport.Id = rawAirport.Id.ToString();
                     airport.Name = rawAirport.Name;
@@ -53,17 +50,12 @@ namespace OpenFlightsCLI.Parsers
 
                     airports.Add(airport);
                 }
+          
             }
 
+            return airports;
 
-
-            Console.WriteLine("");
-            Console.WriteLine($"Total Airports: {result.Count()}");
-            Console.WriteLine($"------------------------------------------------------------");
-            Console.WriteLine("");
-
-            PushToSearchIndex(airports);
-            Console.WriteLine("");
+           // PushToSearchIndex(airports);
         }
 
         void PushToSearchIndex(List<Airport> airports)

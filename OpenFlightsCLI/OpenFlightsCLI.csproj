@@ -11,12 +11,27 @@
     <Folder Include="Parsers\" />
     <Folder Include="Models\Raw\" />
     <Folder Include="Models\AzureSearch\" />
+    <Folder Include="Services\" />
+    <Folder Include="Views\" />
+    <Folder Include="WindowControllers\" />
+    <Folder Include="Views\AzureSearch\" />
+    <Folder Include="Views\MenuBar\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="FileHelpers.NetStandard20" Version="3.2.7.4-unofficial" />
     <PackageReference Include="Microsoft.Azure.Search" Version="3.0.5" />
+    <PackageReference Include="Terminal.Gui" Version="0.5.0" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Parsers\AirlinesParser.config" />
+    <Compile Remove="WindowControllers\SearchWindowController.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Data\Airlines.dat" />
+    <None Remove="Data\Airports.dat" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Data\Airlines.dat" />
+    <EmbeddedResource Include="Data\Airports.dat" />
   </ItemGroup>
 </Project>
