@@ -118,12 +118,17 @@ namespace ContosoFieldService.Helpers
 
         public static string RemoveHitHighlightTags(string value, string preTag, string postTag)
         {
-            var highlightPosition = PositionOfHighlight(value, preTag, postTag);
+            //Lets check to see if the string contains any tags. 
+            if(value.Contains(preTag) && value.Contains(postTag))
+            { 
+                var highlightPosition = PositionOfHighlight(value, preTag, postTag);
 
-            //Remove the brackets from name 
-            value = value.Remove(highlightPosition.Item1, 1);
-            value = value.Remove(highlightPosition.Item2 + 1, 1);
+                //Remove the brackets from name 
+                value = value.Remove(highlightPosition.Item1, 1);
+                value = value.Remove(highlightPosition.Item2 + 1, 1);
 
+                return value;
+            }
             return value;
         }
     }
