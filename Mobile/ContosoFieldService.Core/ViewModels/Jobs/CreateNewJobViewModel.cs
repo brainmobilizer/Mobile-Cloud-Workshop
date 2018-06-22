@@ -31,6 +31,13 @@ namespace ContosoFieldService.ViewModels
             {
                 return new Command(async () =>
                 {
+                    if(Name.Contains("[") || Name.Contains("]"))
+                    {
+                        //We use these characters for hit-highlighting so to avoid issues lets ban entries with them. 
+                        await CoreMethods.DisplayAlert("Invalid use of special characters", "We use square brackets to highlight search results. Please remove any special characters and try again", "OK");
+                        return;
+                    }
+                    
                     var job = new Job
                     {
                         Name = Name,
